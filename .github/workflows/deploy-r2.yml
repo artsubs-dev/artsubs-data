@@ -20,8 +20,7 @@ jobs:
           ENDPOINT: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
           BUCKET: ${{ secrets.R2_BUCKET }}
         run: |
-          aws s3 cp data/ "s3://$BUCKET/data/" --recursive \
+          aws s3 sync data/ "s3://$BUCKET/data/" --delete \
             --endpoint-url "$ENDPOINT" \
             --content-type "application/json" \
-            --cache-control "public, max-age=300" \
-            --metadata-directive REPLACE
+            --cache-control "public, max-age=0, must-revalidate"
