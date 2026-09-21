@@ -24,3 +24,15 @@ jobs:
             --endpoint-url "$ENDPOINT" \
             --content-type "application/json" \
             --cache-control "public, max-age=0, must-revalidate"
+
+      # TAMBAHAN: Tembak revalidate ke Vercel tepat setelah R2 selesai upload
+      - name: Revalidate Vercel
+        env:
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+        run: |
+          if [ -n "$REVALIDATE_SECRET" ]; then
+            curl -s -X POST "https://katalog.artsubs.co/api/revalidate" \
+              -H "x-revalidate-secret: $REVALIDATE_SECRET" \
+              -H "Content-Type: application/json" \
+              -d '{"path": "/"}'
+          fi
